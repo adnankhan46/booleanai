@@ -1,9 +1,79 @@
 import express, { Request, Response, Application } from 'express';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerativeModel, Part } from '@google/generative-ai';
 import cors from 'cors';
 import sharp from 'sharp';
 import dotenv from 'dotenv';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
+
+// Define interfaces for request and response types
+interface AnalyzeRequest {
+  imageData: string;
+  variables?: Record<string, any>;
+}
+
+interface ImagePart {
+  inlineData: {
+    data: string;
+    mimeType: string;
+  };
+}
+
+interface ApiResponse {
+  message: string;
+  data?: any[];
+  status: 'success' | 'partial_success' | 'error';
+  error?: string;
+}
+
+// Response types for different analysis results
+interface LogicExpressionResult {
+  type: 'logic_expression';
+  expr: string;
+  result: string;
+}
+
+interface CodeConversionResult {
+  type: 'code_conversion';
+  input_type: string;
+  output_type: string;
+  input: string;
+  result: string;
+}
+
+interface KmapResult {
+  type: 'kmap';
+  variables: string[];
+  minimized_sop: string;
+  minimized_pos: string;
+  expression_type: string;
+}
+
+interface BinaryArithmeticResult {
+  type: 'binary_arithmetic';
+  operation: string;
+  operand1: string;
+  operand2: string;
+  result: string;
+}
+
+interface BooleanSimplificationResult {
+  type: 'boolean_simplification';
+  original: string;
+  result: string;
+}
+
+interface RawResponseResult {
+  type: 'raw_response';
+  result: string;
+}
+
+type AnalysisResult = 
+  | LogicExpressionResult 
+  | CodeConversionResult 
+  | KmapResult 
+  | BinaryArithmeticResult 
+  | BooleanSimplificationResult 
+  | RawResponseResult;
 
 dotenv.config();
 
@@ -17,18 +87,18 @@ app.use(express.json({ limit: '50mb' }));
 // Initialize Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
-const limiter = rateLimit({
+const limiter: RateLimitRequestHandler = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
     max: 3, // limit each IP to 3 requests per windowMs
     message: { message: "Too many requests in a minute, You can make a maximum of 3 requests per minute" },
 });
 
 // Helper function to convert base64 to image buffer
-async function base64ToImage(base64String: string) {
-    const base64Data = base64String.replace(/^data:image\/\w+;base64,/, '');
-    const imageBuffer = Buffer.from(base64Data, 'base64');
+async function base64ToImage(base64String: string): Promise<ImagePart> {
+    const base64Data: string = base64String.replace(/^data:image\/\w+;base64,/, '');
+    const imageBuffer: Buffer = Buffer.from(base64Data, 'base64');
     
-    const pngBuffer = await sharp(imageBuffer).png().toBuffer();
+    const pngBuffer: Buffer = await sharp(imageBuffer).png().toBuffer();
     
     return {
         inlineData: {
@@ -39,31 +109,40 @@ async function base64ToImage(base64String: string) {
 }
 
 // Global Limit Handling
-let requestCount = 0;
-const REQUEST_LIMIT = 15;
-const LIMIT_WINDOW_MS = 60 * 1000;
+let requestCount: number = 0;
+const REQUEST_LIMIT: number = 15;
+const LIMIT_WINDOW_MS: number = 60 * 1000;
 
 setInterval(() => {
     requestCount = 0;
 }, LIMIT_WINDOW_MS);
 
-app.post('/api/analyze', limiter, async (req: Request, res: Response): Promise<any|void> => {
+app.post('/api/analyze', limiter, async (req: Request, res: Response): Promise<void> => {
     if (requestCount >= REQUEST_LIMIT) {
-        return res.status(503).json({ message: "Too many requests: Server Busy, We are serving at max" });
+        res.status(503).json({ 
+            message: "Too many requests: Server Busy, We are serving at max",
+            status: "error" 
+        });
+        return;
     }
     requestCount++;
 
     try {
-        const { imageData, variables = {} } = req.body;
+        const { imageData, variables = {} }: AnalyzeRequest = req.body;
         
         if (!imageData) {
-            return res.status(400).json({ error: 'No image data provided' });
+            res.status(400).json({ 
+                error: 'No image data provided',
+                status: "error",
+                message: "Missing required data" 
+            });
+            return;
         }
 
-        const model = genAI.getGenerativeModel({ model: process.env.MODEL as string });
-        const imagePart = await base64ToImage(imageData);
+        const model: GenerativeModel = genAI.getGenerativeModel({ model: process.env.MODEL as string });
+        const imagePart: ImagePart = await base64ToImage(imageData);
 
-        const prompt = `You have been given an image with digital electronics questions or circuit problems to solve.
+        const prompt: string = `You have been given an image with digital electronics questions or circuit problems to solve.
         Based on the problem in the image, return only the appropriate JSON object in plain text (do not use backticks or the word 'json').
         Understand the text and numbers from image properly, also if it is a K-Map then make proper coordinates and then give correct answer
 The types of questions may include:
@@ -90,35 +169,43 @@ now based on the question type,
 Use proper escape characters for special symbols. Use 'exclamation mark' for showing 'not' or 'complement'
 If any variables are provided, use their values: ${JSON.stringify(variables)}`;
 
-        const result = await model.generateContent([prompt, imagePart]);
-        const response = result.response;
-        const text = response.text();
-        console.log(text)
+        const result = await model.generateContent([prompt, imagePart as unknown as Part]);
+        const textResponse = await result.response.text();
+        console.log("Result: ", textResponse);
+        
         try {
-            const jsonResponse = JSON.parse(text);
-            res.json({
+            const jsonResponse: AnalysisResult = JSON.parse(textResponse);
+            const apiResponse: ApiResponse = {
                 message: "Image processed",
                 data: [jsonResponse],
                 status: "success"
-            });
+            };
+            res.json(apiResponse);
         } catch (e) {
-            res.json({
+            const apiResponse: ApiResponse = {
                 message: "Image processed but response format error",
-                data: [{ type: "raw_response", result: text }],
+                data: [{ type: "raw_response", result: textResponse }],
                 status: "partial_success"
-            });
+            };
+            res.json(apiResponse);
         }
     } catch (error: any) {
-        res.status(500).json({
+        const apiResponse: ApiResponse = {
             message: error.message,
             error: "Failed to process image",
             status: "error"
-        });
+        };
+        res.status(500).json(apiResponse);
     }
 });
 
-app.get('/', (req: Request, res: Response):any => res.json({ message: "hello" }));
-app.get('/ping', (req: Request, res: Response):any => res.json({ message: "Server pinged at Ping" }));
+app.get('/', (_req: Request, res: Response): void => {
+    res.json({ message: "hello" });
+});
+
+app.get('/ping', (_req: Request, res: Response): void => {
+    res.json({ message: "Server pinged at Ping" });
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
