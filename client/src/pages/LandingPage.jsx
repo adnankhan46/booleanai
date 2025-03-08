@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Calendar, Users, Layout, Box, Clock, Download, Brain, ProjectorIcon, Pencil, ChevronDown, Menu, X, Instagram, Linkedin } from 'lucide-react'
+import { ScanText, Calendar, Users, Layout, Box, Clock, Download, Brain, ProjectorIcon, Pencil, ChevronDown, Menu, X, Instagram, Linkedin, ImageUp, ShieldCheck, Database } from 'lucide-react'
 import demoVid from "../../src/assets/demo-video.mp4"
 import { Link } from 'react-router-dom'
 const Navbar = () => {
@@ -52,12 +52,12 @@ const Hero = () => (
           AI Digital Electronics Question Solver
         </h1>
         <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-        Draw Questions on Whiteboard or Upload an Image for Logic Gates | Code Conversions (BCD to Excess 3, etc) | K-Map | Binary Arithmetic | Boolean Algebra etc
+        Draw Questions on Whiteboard or Upload an Image to solve Digital Electronics Questions for Logic Gates | Code Conversions (BCD to Excess 3, etc) | K-Map | Binary Arithmetic | Boolean Algebra etc
         </p>
         <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
           <div className="rounded-md shadow">
             <Link to="/booleanai">
-            <button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#6a7cff] hover:bg-[#3b4dd8] md:py-4 md:text-lg md:px-10 shadow-custom-shadow transition-all duration-200 ease-in-out">
+            <button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#6a7cff] hover:bg-[#3b4dd8] md:py-4 md:text-lg md:px-10  transition-all duration-200 ease-in-out">
               Start Solving For Free
             </button>
             </Link>
@@ -75,47 +75,47 @@ const Hero = () => (
 
 const Feature = ({ icon: Icon, title, description }) => (
   <div className="p-6 bg-white rounded-lg shadow-md">
-    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mb-4">
+    <div className="w-12 h-12 bg-[#e8f2ff] rounded-lg flex items-center justify-center text-[#6a7cff] mb-4">
       <Icon size={24} />
     </div>
     <h3 className="text-lg font-semibold mb-2">{title}</h3>
-    <p className="text-gray-600">{description}</p>
+    <p className="text-gray-600">{description}</p>  
   </div>
 )
 
 const Features = () => (
   <section id="features" className="py-20 bg-gray-50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl font-bold text-center mb-12">Powerful Features for BooleanAI</h2>
+      <h2 className="text-3xl font-bold text-center mb-12">Powerful Features of BooleanAI</h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         <Feature
-          icon={Users}
-          title="Real-time Collaboration"
+          icon={ScanText}
+          title="Whiteboard Handwriting Recognition"
           description="Work together with your team in real-time, no matter where you are."
         />
         <Feature
-          icon={Layout}
-          title="Infinite Canvas"
+          icon={ImageUp}
+          title="Question Image Upload"
           description="Never run out of space - our infinite canvas grows with your ideas."
         />
         <Feature
           icon={Box}
-          title="Smart Shapes"
+          title="Clean Minimalist Design"
           description="Create perfect shapes instantly with our intelligent shape recognition."
         />
         <Feature
-          icon={Calendar}
-          title="Template Library"
+          icon={ShieldCheck}
+          title="Increased Accuracy"
           description="Get started quickly with our extensive library of templates."
         />
         <Feature
-          icon={Clock}
-          title="Version History"
-          description="Track changes and revert to previous versions with ease."
+          icon={Database}
+          title="Langchain Integration"
+          description="Give Follow Ups to the question provided, Coming Soon."
         />
         <Feature
           icon={Download}
-          title="Export Options"
+          title="Export & Save Solutions"
           description="Export your work in various formats for easy sharing and presentation."
         />
       </div>
@@ -123,54 +123,77 @@ const Features = () => (
   </section>
 )
 
-const UseCase = ({ icon: Icon, title, description }) => (
-  <div className="p-6 bg-white rounded-lg shadow-md">
-    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 mb-4">
-      <Icon size={24} />
-    </div>
-    <h3 className="text-lg font-semibold mb-2">{title}</h3>
-    <p className="text-gray-600">{description}</p>
-  </div>
-)
+// const UseCase = ({ icon: Icon, title, description }) => (
+//   <div className="p-6 bg-white rounded-lg shadow-md">
+//     <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 mb-4">
+//       <Icon size={24} />
+//     </div>
+//     <h3 className="text-lg font-semibold mb-2">{title}</h3>
+//     <p className="text-gray-600">{description}</p>
+//   </div>
+// )
 
-const UseCases = () => (
+// const UseCases = () => (
+//   <section className="py-20 bg-white">
+//     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+//       <h2 className="text-3xl font-bold text-center mb-12">Use Cases for Our Whiteboard Tool</h2>
+//       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+//         <UseCase
+//           icon={Brain}
+//           title="Brainstorming Sessions"
+//           description="Capture and organize ideas collaboratively in real-time."
+//         />
+//         <UseCase
+//           icon={ProjectorIcon}
+//           title="Remote Teaching"
+//           description="Create engaging online lessons and visual explanations."
+//         />
+//         <UseCase
+//           icon={Pencil}
+//           title="UX/UI Design"
+//           description="Sketch wireframes and prototypes quickly and efficiently."
+//         />
+//       </div>
+//     </div>
+//   </section>
+// )
+
+const OpenSource = () => (
   <section className="py-20 bg-white">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl font-bold text-center mb-12">Use Cases for Our Whiteboard Tool</h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <UseCase
-          icon={Brain}
-          title="Brainstorming Sessions"
-          description="Capture and organize ideas collaboratively in real-time."
-        />
-        <UseCase
-          icon={ProjectorIcon}
-          title="Remote Teaching"
-          description="Create engaging online lessons and visual explanations."
-        />
-        <UseCase
-          icon={Pencil}
-          title="UX/UI Design"
-          description="Sketch wireframes and prototypes quickly and efficiently."
-        />
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 className="text-3xl font-bold mb-6">Open Source Community Driven</h2>
+      <p className="text-gray-600 mb-8 max-w-2xl mx-auto text-lg">
+        Our plateform is open source. As we are big time open-source fans because of its collaborative nature and growth-for-all
+        persona. We built BooleanAI a community of folks just like us because we wanted to give something back to place we have
+        learnt so much from.
+      </p>
+      <p className="text-gray-600 my-4 mb-8 max-w-2xl mx-auto text-lg">
+        You can be a part of this journey by helping us improve BooleanAI for thousands of people around the world.
+      </p>
+      <div className="flex justify-center space-x-4">
+        <button className="px-6 py-3 bg-[#6a7cff] text-white rounded-md hover:bg-blue-700">
+          Contribute [GT]
+        </button>
+        <button className="px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50">
+          Star us on GitHub
+        </button>
       </div>
     </div>
   </section>
 )
-
-const OpenSource = () => (
+const SponsorUs = () => (
   <section className="py-20 bg-gray-50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 className="text-3xl font-bold mb-6">Open Source</h2>
-      <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-        Our whiteboard tool is open source. We believe in the power of collaboration and community-driven development.
+      <h2 className="text-3xl font-bold mb-6">Sponsor Us</h2>
+      <p className="text-gray-600 mb-8 max-w-2xl mx-auto text-lg">
+        Your support will help this project grow and impact thousands of lives.
       </p>
       <div className="flex justify-center space-x-4">
-        <button className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-          View on GitHub
+        <button className="px-6 py-3 bg-[#6a7cff] text-white rounded-md hover:bg-blue-700">
+          Buy me a coffee
         </button>
-        <button className="px-6 py-3 border border-gray-300 rounded-md hover:bg-gray-50">
-          Read Documentation
+        <button className="px-2 py-3 border border-gray-300 rounded-md hover:bg-gray-50">
+          Sponsor Us (RazorPay)
         </button>
       </div>
     </div>
@@ -178,7 +201,7 @@ const OpenSource = () => (
 )
 
 const PricingTier = ({ title, price, features, isPopular }) => (
-  <div className={`p-8 bg-white rounded-lg shadow-md ${isPopular ? 'ring-2 ring-blue-600' : ''}`}>
+  <div className={`p-8 bg-white rounded-lg shadow-md ${isPopular ? 'ring-2 ring-[#6a7cff]' : ''}`}>
     <h3 className="text-xl font-semibold mb-4">{title}</h3>
     <div className="mb-6">
       <span className="text-4xl font-bold">₹{price}</span>
@@ -194,7 +217,7 @@ const PricingTier = ({ title, price, features, isPopular }) => (
         </li>
       ))}
     </ul>
-    <button className={`w-full py-3 rounded-md ${isPopular ? 'bg-blue-600 text-white' : 'border border-gray-300'}`}>
+    <button className={`w-full py-3 rounded-md ${isPopular ? 'bg-[#6a7cff] text-white' : 'border border-gray-300'}`}>
       {isPopular ? 'Get Started' : 'Coming Soon'}
     </button>
   </div>
@@ -203,25 +226,27 @@ const PricingTier = ({ title, price, features, isPopular }) => (
 const Pricing = () => (
   <section id="pricing" className="py-20 bg-white">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl font-bold text-center mb-12">Simple, Transparent Pricing</h2>
+      <h2 className="text-3xl font-bold text-center mb-12">Completely Free till Now</h2>
       <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         <PricingTier
           title="Free"
           price="0"
           features={[
-            'Unlimited boards',
-            'Basic shapes',
-            'Core features'
+            'Well working Model',
+            'More than 85% Accuracy',
+            'High Rate Limits',
+            'All Core features',
           ]}
           isPopular
         />
         <PricingTier
           title="Pro"
-          price="149"
+          price="1XX"
           features={[
-            'Everything in Free',
+            'Select your own Model',
+            'Priority support',
+            'Low Rate Limits',
             'Advanced features',
-            'Priority support'
           ]}
           
         />
@@ -243,16 +268,16 @@ const TeamMember = ({ name, role, image }) => (
 const Team = () => (
   <section id="team" className="py-20 bg-gray-50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl font-bold text-center mb-12">Meet Our Team</h2>
+      <h2 className="text-4xl font-bold text-center mb-12">Team</h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-12">
         <TeamMember
-          name="John Doe"
-          role="Product Lead"
+          name="Adnan Khan"
+          role="Creator, Developer"
           image="/placeholder.svg?height=128&width=128"
         />
         <TeamMember
-          name="Jane Smith"
-          role="Lead Developer"
+          name="Garv Thakre"
+          role="Developer"
           image="/placeholder.svg?height=128&width=128"
         />
        
@@ -289,24 +314,20 @@ const FAQItem = ({ question, answer }) => {
   const FAQ = () => {
     const faqs = [
       {
-        question: "Is the whiteboard tool really free?",
-        answer: "Yes! Our core features are completely free and will always be. We offer a Pro plan for advanced features and priority support."
+        question: "How do i use BooleanAI?",
+        answer: "Simply click 'Start Solving for Free' Now sketch your question or diagrams. You can upload photos of handwritten problems for quick solutions."
       },
       {
-        question: "How many team members can I add?",
-        answer: "You can add unlimited team members to collaborate on your whiteboards in real-time, even on our free plan."
+        question: "Is the BooleanAI really free?",
+        answer: "Yes! Our core features are completely free now. We will offer a Pro plan for advanced features and priority support."
       },
       {
-        question: "Can I integrate with other tools?",
-        answer: "Yes, we support integration with popular tools through our API. This feature is available on our Pro plan."
+        question: "Do I need an account to get started?",
+        answer: "No account is needed to try our basic feautres, but creating one lets you save and revisit saved questions."
       },
       {
-        question: "Is my data secure?",
-        answer: "We take data security  very seriously. All your data is encrypted in transit and at rest. We also offer regular backups and have strict access controls in place."
-      },
-      {
-        question: "Do you offer custom enterprise solutions?",
-        answer: "We offer tailored enterprise solutions with custom features, dedicated support, and on-premise options. Contact our sales team for more information."
+        question: "Can I Solve all levels of Digital Electronics Questions?",
+        answer: "Currently it supports basic to intermediate questions of binary arithmetic, boolean algebra, logic gates, K-Map and Code Conversions."
       }
     ]
   
@@ -335,6 +356,11 @@ const Footer = () => (
             <Instagram size={20} />
             <Linkedin size={20}/>
             </div>
+            <div className="campusx-branding border-t border-gray-800 flex gap-4 mt-4 pt-2">
+            <p className='text-gray-300'>Also Try</p>
+            <a href="#" className="text-gray-400 hover:text-white">CampusX</a>
+            <a href="#" className="text-gray-400 hover:text-white">CampusAI</a>
+            </div>
           </div>
         </div>
       <div className='flex flex-col md:flex-row gap-8 md:gap-12'>
@@ -357,7 +383,7 @@ const Footer = () => (
       </div>
       </div>
       <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
-        <p>&copy; 2024 BooleanAI. All rights reserved.</p>
+        <p>&copy; 2024 Adnan Khan. All rights reserved.</p>
       </div>
     </div>
   </footer>
@@ -369,8 +395,8 @@ export default function LandingPage() {
       <Navbar />
       <Hero />
       <Features />
-      <UseCases />
       <OpenSource />
+      <SponsorUs />
       <Pricing />
       <Team />
       <FAQ />

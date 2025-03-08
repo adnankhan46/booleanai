@@ -20,7 +20,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
     max: 3, // limit each IP to 5 requests per windowMs
-    message: { message: "Too many requests in a minute" }, // response message
+    message: { message: "Too many requests in a minute, You can make a maximum of 3 request per minute" }, // response message
 });
 
 // Helper function to convert base64 to image buffer
@@ -41,7 +41,7 @@ async function base64ToImage(base64String) {
         }
     };
 }
-
+// GLobal Limit Handling
 let requestCount = 0;
 const REQUEST_LIMIT = 15;
 const LIMIT_WINDOW_MS = 60 * 1000;
@@ -50,10 +50,14 @@ setInterval(() => {
     requestCount = 0;
   }, LIMIT_WINDOW_MS);
 
+/*  # ABOUT: <POST> '/api/analyze/' :
+ 1. Checking GLobal Limit, Increment ReqCount
+ 2. From body, taking imageData and Variables(Extra Supportive words) for imageData, converting variables to strings
+ 3.  */
 app.post('/api/analyze', limiter,async (req, res) => {
     if (requestCount >= REQUEST_LIMIT) {
-        // Return a "Server Busy" response if the limit is reached
-        return res.status(503).json({ message: "Too many request" });
+        // here Server limit is reached
+        return res.status(503).json({ message: "Too many request: Server Busy, We are serving at max" });
       }
       requestCount++;
 
@@ -91,7 +95,7 @@ Analyze the problem in the image and return ONLY the appropriate JSON object.
 Make sure do not use backticks and json names, give only return values as json like object,
 
 now based on the question type,
-Use proper escape characters for special symbols.
+Use proper escape characters for special symbols. Use 'exclamation mark' for showing 'not' or 'complement'
 If any variables are provided, use their values: ${JSON.stringify(variables)}`;
 
         const result = await model.generateContent([prompt, imagePart]);
@@ -133,6 +137,22 @@ If any variables are provided, use their values: ${JSON.stringify(variables)}`;
 });
 
 app.get('/', (req, res) => res.json({ "message": "hello" }));
+app.get('/ping', (req, res) => res.json({ "message": "Server pinged at X" }));
+
+// check memory usage
+  
+const formatMemoryUsage = (data) => `${Math.round(data / 1024 / 1024 * 100) / 100} MB`;
+  
+const memoryData = process.memoryUsage();
+
+const memoryUsage = {
+  rss: `${formatMemoryUsage(memoryData.rss)} -> Resident Set Size - total memory allocated for the process execution`,
+  heapTotal: `${formatMemoryUsage(memoryData.heapTotal)} -> total size of the allocated heap`,
+  heapUsed: `${formatMemoryUsage(memoryData.heapUsed)} -> actual memory used during the execution`,
+  external: `${formatMemoryUsage(memoryData.external)} -> V8 external memory`,
+};
+
+console.log(memoryUsage);
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

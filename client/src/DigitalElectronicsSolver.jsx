@@ -1,7 +1,36 @@
 import { useState, useRef, useEffect } from 'react'
-import { Upload, RefreshCw, WandSparkles } from 'lucide-react'
+import { Upload, RefreshCw, WandSparkles, Dices } from 'lucide-react'
+import loadingSvg from "../public/loading-white.svg"
+import randomImg1 from "/questions/deciToBin.png"
+import randomImg2 from "/questions/logic-gates.jpg"
+
 
 export default function ImageAnalyzer() {
+  const resultRef = useRef(null);
+  const loadingLabel = [
+    "Connecting the dots (and gates)...",
+    "Making logic out of chaos...",
+    "Turning zeros into heroes...",
+    "Calculating the unthinkable...",
+    "Boolean algebraizing...",
+    "Investigating Existance...",
+    "Finding truth in the logic forest...",
+    "Powering up AI neurons...",
+    "Assembling bits of brilliance...",
+    "Turning the Boolean Dial...",
+    "Solving faster than your Professor...",
+  ]
+  
+  const randomNum = Math.floor(Math.random() * loadingLabel.length);
+  const loadingText = loadingLabel[randomNum];
+
+  const randomImgArr = [
+    randomImg1, randomImg2
+  ]
+  // const randomNumImg = Math.floor(Math.random() * randomImgArr.length);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const randomImg = randomImgArr[currentIndex]
+
   const [image, setImage] = useState(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [analysisResult, setAnalysisResult] = useState(null)
@@ -13,7 +42,7 @@ export default function ImageAnalyzer() {
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
-    ctx.lineWidth = 3
+    ctx.lineWidth = 5
     ctx.lineCap = 'round'
     ctx.strokeStyle = '#000000'
 
@@ -38,6 +67,12 @@ export default function ImageAnalyzer() {
 
     return () => window.removeEventListener('resize', resizeCanvas)
   }, [image])
+// Scrolling To Bottom
+  useEffect(() => {
+    if (analysisResult) {
+      resultRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [analysisResult]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
@@ -109,22 +144,23 @@ export default function ImageAnalyzer() {
         body: JSON.stringify({ imageData: dataUrl }),
       })
       if (!response.ok) {
-        // Extract the status text for display
         const errorResponse = await response.json();
         throw new Error(errorResponse.message || 'Analysis failed');
       }
       const result = await response.json()
       setAnalysisResult(result)
-      // setAnaType(result?.data[0]?.type) // Check for type
+
+      // resultRef.current?.scrollIntoView({ behavior: 'smooth' });
+      // setAnaType(result?.data[0]?.type) // Checking type
     } catch (error) {
-      console.error('Error during analysis:', error)
-      setAnalysisResult({ error: `Analysis failed. ${error.message} : Server Busy,  Please try again after 60 seconds.`})
+      console.log('Error during analysis:', error)
+      setAnalysisResult({ error: `Analysis failed. ${error.message}`})
+      // resultRef.current?.scrollIntoView({ behavior: 'smooth' });
     } finally {
       setLoading(false)
     }
   }
 
-  // Render the analysis result based on type
   const renderResult = () => {
     if (!analysisResult || analysisResult.error) return <p className="text-red-500">{analysisResult?.error}</p>
     if (!analysisResult.data || analysisResult.data.length === 0) return <p className="text-red-500">No analysis data available.</p>
@@ -177,6 +213,10 @@ export default function ImageAnalyzer() {
     }
   }
 
+  const handleRandom = () => {
+    setCurrentIndex(prevIndex => (prevIndex + 1) % randomImgArr.length);
+  setImage(randomImg);
+  }
   return (
     <div className="min-h-fit">
       <div className=" mx-auto w-full max-w-[1700px] bg-white rounded-lg shadow-md p-2 flex flex-col">
@@ -223,27 +263,33 @@ export default function ImageAnalyzer() {
         <div className="mt-2 flex flex-col sm:flex-row gap-2 sm:gap-4">
           <button
             onClick={handleReset}
-            className="flex-1 bg-gray-200 text-xl text-grey-800 py-2 px-4 rounded hover:bg-gray-300 transition duration-300 flex items-center justify-center"
+            className="basis-1/4 bg-gray-200 text-xl text-grey-800 py-2 px-4 rounded hover:bg-gray-300 transition duration-300 flex items-center justify-center"
             aria-label="Reset canvas"
           >
             <RefreshCw className="mr-2" size={20} />
             Reset
           </button>
+          {/* TODO: to randomly select question from public and clean ups */}
+          <button
+            onClick={handleRandom}
+            className="basis-1/4 bg-gray-200 text-xl text-grey-800 py-2 px-4 rounded hover:bg-gray-300 transition duration-300 flex items-center justify-center"
+            aria-label="Reset canvas"
+          >
+            <Dices className="mr-2" size={20}/>
+            Random
+          </button>
           <button
             onClick={handleAnalyze}
             disabled={loading}
-            className={`flex-1 bg-[#6a7cff] text-xl text-white py-2 px-4 rounded hover:bg-[#4d62ff] transition duration-300 flex items-center justify-center ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
+            className={`basis-1/2 bg-[#6a7cff] text-xl text-white py-2 px-4 rounded hover:bg-[#4d62ff] transition duration-300 flex items-center justify-center ${
+              loading ? 'opacity-75 cursor-not-allowed' : ''
             }`}
             aria-label="Analyze image"
           >
             {loading ? (
               <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 4.411 2.896 8.167 7 9.583l-1-2.292z"></path>
-                </svg>
-                Loading...
+                <img src={loadingSvg} alt="" className='h-8 mx-2' />
+                {loadingText}
               </>
             ) : (
               <>
@@ -255,8 +301,9 @@ export default function ImageAnalyzer() {
         </div>
         
         <div className="mt-2 bg-gray-100 rounded p-4">
-          <h2 className="text-lg font-semibold mb-2">Analysis Result:</h2>
+          <h2 className="text-lg font-semibold mb-2">Analysis Result</h2>
           {renderResult()}
+      <div ref={resultRef}></div>
         </div>
         </div>
       </div>

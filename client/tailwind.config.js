@@ -7,6 +7,10 @@ export default {
       boxShadow: {
         'custom-shadow': '0 4px 4px #08080814, 0 1px 2px #08080833, inset 0 6px 12px #ffffff1f, inset 0 1px 1px #fff3',
       },
+      fontFamily: {
+        outfit: ["Outfit", "sans-serif", "helvetica"],
+        suse: ["SUSE"]
+      }
     },
   },
   plugins: [],
