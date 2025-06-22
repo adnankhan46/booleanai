@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { createApp } from './app.ts';
 import { initializeAI } from './services/aiService.ts';
+import logger from './utils/logger.ts';
 
 // Load environment variables
 dotenv.config();
@@ -14,5 +15,6 @@ initializeAI(apiKey);
 
 const app = createApp();
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    // console.log(`Server running on port ${port}`);
+     logger.info(`Server running on port ${port}`);
 });

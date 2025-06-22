@@ -4,6 +4,7 @@ import { analyzeImage, parseAnalysisResponse } from '../services/aiService.ts';
 import { base64ToImage } from '../services/imageService.ts';
 import { GlobalRateLimiter } from '../middleware/rateLimiter.ts';
 import { AnalyzeRequest, ApiResponse } from '../types.ts';
+import logger from '../utils/logger.ts';
 
 // Initialize global rate limiter
 const globalLimiter = new GlobalRateLimiter();
@@ -47,7 +48,7 @@ export async function analyzeController(req: Request, res: Response): Promise<vo
         
         // Analyze image with AI
         const textResponse = await analyzeImage(imagePart, variables, modelName);
-        console.log(textResponse);
+        // console.log(textResponse);
         
         // Parse the response
         const { success, result } = parseAnalysisResponse(textResponse);
@@ -65,6 +66,7 @@ export async function analyzeController(req: Request, res: Response): Promise<vo
                 status: "partial_success"
             };
             
+            logger.info(`API SUCCESS`);
         res.json(apiResponse);
     } catch (error: any) {
         const apiResponse: ApiResponse = {
@@ -72,6 +74,8 @@ export async function analyzeController(req: Request, res: Response): Promise<vo
             error: "Failed to process image",
             status: "error"
         };
+        
+        logger.info(`API FAILED`);
         res.status(500).json(apiResponse);
     }
 }
