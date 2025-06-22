@@ -1,9 +1,41 @@
-import React, {useState} from 'react'
-import { ScanText, Calendar, Users, Layout, Box, Clock, Download, Brain, ProjectorIcon, Pencil, ChevronDown, Menu, X, Instagram, Linkedin, ImageUp, ShieldCheck, Database } from 'lucide-react'
-import demoVid from "../../src/assets/demo-video.mp4"
-import { Link } from 'react-router-dom'
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false) 
+import React, { useState } from 'react';
+import { ScanText, Box, Download, ChevronDown, Menu, X, Instagram, Linkedin, ImageUp, ShieldCheck, Database, type LucideIcon} from 'lucide-react';
+import demoVid from "../src/assets/demo-video.mp4";
+import { Link } from 'react-router';
+
+const github = "https://www.github.com/adnankhan46/booleanai";
+
+interface FeatureProps {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+interface PricingTierProps {
+  title: string;
+  price: string;
+  features: string[];
+  isPopular?: boolean;
+  action: string;
+}
+
+interface TeamMemberProps {
+  name: string;
+  role: string;
+  image: string;
+}
+
+interface FAQItemProps {
+  question: string;
+  answer: string;
+}
+
+const Navbar: React.FC = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  let server_status = false;
+  if(import.meta.env.VITE_SERVER_STATUS==="Paused"){
+    server_status = false;
+  };
   
   return (
     <nav className="bg-white fixed w-full z-50 shadow-sm">
@@ -13,6 +45,9 @@ const Navbar = () => {
             {/* <img src="/placeholder.svg?height=32&width=32" alt="Logo" className="h-8 w-8" /> */}
             <span className="ml-2 text-2xl md:text-3xl font-semibold">Boolean<span className='text-[#6a7cff]'>AI</span></span>
           </div>
+          {(!server_status) &&
+            <div className={`ml-20 flex justify-center items-center rounded-2xl my-2 px-4 text-gray-500 border border-gray-600`}>Server is Currently {import.meta.env.VITE_SERVER_STATUS}</div>
+          }
           <div className="hidden md:flex items-center space-x-4">
             <a href="#features" className="text-gray-600 hover:text-gray-900">Features</a>
             <a href="#pricing" className="text-gray-600 hover:text-gray-900">Pricing</a>
@@ -41,10 +76,10 @@ const Navbar = () => {
         </div>
       )}
     </nav>
-  )
-}
+  );
+};
 
-const Hero = () => (
+const Hero: React.FC = () => (
   <div className="pt-20 bg-gray-50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
       <div className="text-center">
@@ -52,28 +87,28 @@ const Hero = () => (
           AI Digital Electronics Question Solver
         </h1>
         <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-        Draw Questions on Whiteboard or Upload an Image to solve Digital Electronics Questions for Logic Gates | Code Conversions (BCD to Excess 3, etc) | K-Map | Binary Arithmetic | Boolean Algebra etc
+          Draw Questions on Whiteboard or Upload an Image to solve Digital Electronics Questions for Logic Gates | Code Conversions (BCD to Excess 3, etc) | K-Map | Binary Arithmetic | Boolean Algebra etc
         </p>
         <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
           <div className="rounded-md shadow">
             <Link to="/booleanai">
-            <button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#6a7cff] hover:bg-[#3b4dd8] md:py-4 md:text-lg md:px-10  transition-all duration-200 ease-in-out">
-              Start Solving For Free
-            </button>
+              <button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#6a7cff] hover:bg-[#3b4dd8] md:py-4 md:text-lg md:px-10  transition-all duration-200 ease-in-out">
+                Start Solving For Free
+              </button>
             </Link>
           </div>
         </div>
       </div>
       <div className="mt-10 bg-white rounded-lg shadow-xl overflow-hidden">
         <p className='text-center text-gray-400'>Video Demo</p>
-        <video alt='video-demo' controls src={demoVid} className='w-full' autoPlay>
-     </video>
+        <video controls src={demoVid} className='w-full' autoPlay>
+        </video>
       </div>
     </div>
   </div>
-)
+);
 
-const Feature = ({ icon: Icon, title, description }) => (
+const Feature: React.FC<FeatureProps> = ({ icon: Icon, title, description }) => (
   <div className="p-6 bg-white rounded-lg shadow-md">
     <div className="w-12 h-12 bg-[#e8f2ff] rounded-lg flex items-center justify-center text-[#6a7cff] mb-4">
       <Icon size={24} />
@@ -81,9 +116,9 @@ const Feature = ({ icon: Icon, title, description }) => (
     <h3 className="text-lg font-semibold mb-2">{title}</h3>
     <p className="text-gray-600">{description}</p>  
   </div>
-)
+);
 
-const Features = () => (
+const Features: React.FC = () => (
   <section id="features" className="py-20 bg-gray-50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 className="text-3xl font-bold text-center mb-12">Powerful Features of BooleanAI</h2>
@@ -121,44 +156,9 @@ const Features = () => (
       </div>
     </div>
   </section>
-)
+);
 
-// const UseCase = ({ icon: Icon, title, description }) => (
-//   <div className="p-6 bg-white rounded-lg shadow-md">
-//     <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 mb-4">
-//       <Icon size={24} />
-//     </div>
-//     <h3 className="text-lg font-semibold mb-2">{title}</h3>
-//     <p className="text-gray-600">{description}</p>
-//   </div>
-// )
-
-// const UseCases = () => (
-//   <section className="py-20 bg-white">
-//     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//       <h2 className="text-3xl font-bold text-center mb-12">Use Cases for Our Whiteboard Tool</h2>
-//       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-//         <UseCase
-//           icon={Brain}
-//           title="Brainstorming Sessions"
-//           description="Capture and organize ideas collaboratively in real-time."
-//         />
-//         <UseCase
-//           icon={ProjectorIcon}
-//           title="Remote Teaching"
-//           description="Create engaging online lessons and visual explanations."
-//         />
-//         <UseCase
-//           icon={Pencil}
-//           title="UX/UI Design"
-//           description="Sketch wireframes and prototypes quickly and efficiently."
-//         />
-//       </div>
-//     </div>
-//   </section>
-// )
-
-const OpenSource = () => (
+const OpenSource: React.FC = () => (
   <section className="py-20 bg-white">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 className="text-3xl font-bold mb-6">Open Source Community Driven</h2>
@@ -171,22 +171,27 @@ const OpenSource = () => (
         You can be a part of this journey by helping us improve BooleanAI for thousands of people around the world.
       </p>
       <div className="flex justify-center space-x-4">
-        <button className="px-6 py-3 bg-[#6a7cff] text-white rounded-md hover:bg-blue-700">
-          Contribute [GT]
+        <Link to={github}>
+        <button className="w-fit px-6 py-3 bg-[#6a7cff] text-white rounded-md hover:bg-blue-700">
+          Contribute to Github
         </button>
+        </Link>
+        <Link to={github}>
         <button className="px-3 py-3 border border-gray-300 rounded-md hover:bg-gray-50">
           Star us on GitHub
         </button>
+        </Link>
       </div>
     </div>
   </section>
-)
-const SponsorUs = () => (
+);
+
+const SponsorUs: React.FC = () => (
   <section className="py-20 bg-gray-50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 className="text-3xl font-bold mb-6">Sponsor Us</h2>
       <p className="text-gray-600 mb-8 max-w-2xl mx-auto text-lg">
-        Your support will help this project grow and impact thousands of lives.
+        Your support will help this project grow and impact thousands of students.
       </p>
       <div className="flex justify-center space-x-4">
         <button className="px-6 py-3 bg-[#6a7cff] text-white rounded-md hover:bg-blue-700">
@@ -198,9 +203,9 @@ const SponsorUs = () => (
       </div>
     </div>
   </section>
-)
+);
 
-const PricingTier = ({ title, price, features, isPopular }) => (
+const PricingTier: React.FC<PricingTierProps> = ({ title, price, features, isPopular = false, action }) => (
   <div className={`p-8 bg-white rounded-lg shadow-md ${isPopular ? 'ring-2 ring-[#6a7cff]' : ''}`}>
     <h3 className="text-xl font-semibold mb-4">{title}</h3>
     <div className="mb-6">
@@ -208,7 +213,7 @@ const PricingTier = ({ title, price, features, isPopular }) => (
       <span className="text-gray-600">/month</span>
     </div>
     <ul className="space-y-4 mb-8">
-      {features.map((feature, index) => (
+      {features.map((feature: string, index: number) => (
         <li key={index} className="flex items-center">
           <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
@@ -217,13 +222,15 @@ const PricingTier = ({ title, price, features, isPopular }) => (
         </li>
       ))}
     </ul>
+    <Link to='/booleanai'>
     <button className={`w-full py-3 rounded-md ${isPopular ? 'bg-[#6a7cff] text-white' : 'border border-gray-300'}`}>
-      {isPopular ? 'Get Started' : 'Coming Soon'}
+      {action}
     </button>
+    </Link>
   </div>
-)
+);
 
-const Pricing = () => (
+const Pricing: React.FC = () => (
   <section id="pricing" className="py-20 bg-white">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 className="text-3xl font-bold text-center mb-12">Completely Free till Now</h2>
@@ -238,6 +245,7 @@ const Pricing = () => (
             'All Core features',
           ]}
           isPopular
+          action="Get Started"
         />
         <PricingTier
           title="Pro"
@@ -248,14 +256,14 @@ const Pricing = () => (
             'Low Rate Limits',
             'Advanced features',
           ]}
-          
+          action="Coming Soon"
         />
       </div>
     </div>
   </section>
-)
+);
 
-const TeamMember = ({ name, role, image }) => (
+const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image }) => (
   <div className="text-center">
     <div className="w-32 h-32 mx-auto mb-4">
       <img src={image} alt={name} className="w-full h-full rounded-full bg-purple-600" />
@@ -263,9 +271,9 @@ const TeamMember = ({ name, role, image }) => (
     <h3 className="text-lg font-semibold">{name}</h3>
     <p className="text-gray-600">{role}</p>
   </div>
-)
+);
 
-const Team = () => (
+const Team: React.FC = () => (
   <section id="team" className="py-20 bg-gray-50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 className="text-4xl font-bold text-center mb-12">Team</h2>
@@ -280,116 +288,116 @@ const Team = () => (
           role="Developer"
           image="/placeholder.svg?height=128&width=128"
         />
-       
       </div>
     </div>
   </section>
-)
+);
 
-const FAQItem = ({ question, answer }) => {
-    const [isOpen, setIsOpen] = useState(false)
-  
-    return (
-      <div className="border-b border-gray-200 pb-4">
-        <button
-          className="flex justify-between items-center w-full text-left py-2 focus:outline-none"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <h3 className="text-lg font-semibold text-gray-900">{question}</h3>
-          <ChevronDown
-            className={`w-5 h-5 text-gray-500 transform transition-transform duration-200 ${
-              isOpen ? 'rotate-180' : ''
-            }`}
-          />
-        </button>
-        {isOpen && (
-          <div className="mt-2 text-gray-600">
-            <p>{answer}</p>
-          </div>
-        )}
-      </div>
-    )
-  }
-  
-  const FAQ = () => {
-    const faqs = [
-      {
-        question: "How do i use BooleanAI?",
-        answer: "Simply click 'Start Solving for Free' Now sketch your question or diagrams. You can upload photos of handwritten problems for quick solutions."
-      },
-      {
-        question: "Is the BooleanAI really free?",
-        answer: "Yes! Our core features are completely free now. We will offer a Pro plan for advanced features and priority support."
-      },
-      {
-        question: "Do I need an account to get started?",
-        answer: "No account is needed to try our basic feautres, but creating one lets you save and revisit saved questions."
-      },
-      {
-        question: "Can I Solve all levels of Digital Electronics Questions?",
-        answer: "Currently it supports basic to intermediate questions of binary arithmetic, boolean algebra, logic gates, K-Map and Code Conversions."
-      }
-    ]
-  
-    return (
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
-          <div className="space-y-8">
-            {faqs.map((faq, index) => (
-              <FAQItem key={index} question={faq.question} answer={faq.answer} />
-            ))}
-          </div>
+const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  return (
+    <div className="border-b border-gray-200 pb-4">
+      <button
+        className="flex justify-between items-center w-full text-left py-2 focus:outline-none"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <h3 className="text-lg font-semibold text-gray-900">{question}</h3>
+        <ChevronDown
+          className={`w-5 h-5 text-gray-500 transform transition-transform duration-200 ${
+            isOpen ? 'rotate-180' : ''
+          }`}
+        />
+      </button>
+      {isOpen && (
+        <div className="mt-2 text-gray-600">
+          <p>{answer}</p>
         </div>
-      </section>
-    )
-  }
-const Footer = () => (
+      )}
+    </div>
+  );
+};
+
+const FAQ: React.FC = () => {
+  const faqs: FAQItemProps[] = [
+    {
+      question: "How do i use BooleanAI?",
+      answer: "Simply click 'Start Solving for Free' Now sketch your question or diagrams. You can upload photos of handwritten problems for quick solutions."
+    },
+    {
+      question: "Is the BooleanAI really free?",
+      answer: "Yes! Our core features are completely free now. We will offer a Pro plan for advanced features and priority support."
+    },
+    {
+      question: "Do I need an account to get started?",
+      answer: "No account is needed to try our basic feautres, but creating one lets you save and revisit saved questions."
+    },
+    {
+      question: "Can I Solve all levels of Digital Electronics Questions?",
+      answer: "Currently it supports basic to intermediate questions of binary arithmetic, boolean algebra, logic gates, K-Map and Code Conversions."
+    }
+  ];
+
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+        <div className="space-y-8">
+          {faqs.map((faq: FAQItemProps, index: number) => (
+            <FAQItem key={index} question={faq.question} answer={faq.answer} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Footer: React.FC = () => (
   <footer className="bg-[#060a2c] text-white">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex flex-col md:flex-row w-full justify-between md:px-16 gap-14">
         <div className="booleanai">
           <div className="onlyElement">
-          <h2 className='text-4xl font-extrabold text-white'>BooleanAI</h2>
+            <h2 className='text-4xl font-extrabold text-white'>BooleanAI</h2>
             <p className='my-2 text-gray-300'>Smoother than your cheesecake</p>
             <div className="social-list flex gap-4">
-            <Instagram size={20} />
-            <Linkedin size={20}/>
+              <Instagram size={20} />
+              <Linkedin size={20}/>
             </div>
             <div className="campusx-branding border-t border-gray-800 flex gap-4 mt-4 pt-2">
-            <p className='text-gray-300'>Also Try</p>
-            <a href="#" className="text-gray-400 hover:text-white">CampusX</a>
-            <a href="#" className="text-gray-400 hover:text-white">CampusAI</a>
+              <p className='text-gray-300'>Also Try</p>
+              <a href="#" className="text-gray-400 hover:text-white">CampusX</a>
+              <a href="#" className="text-gray-400 hover:text-white">CampusAI</a>
             </div>
           </div>
         </div>
-      <div className='flex flex-col md:flex-row gap-8 md:gap-12'>
-        <div className='1st element'>
-          <h3 className="text-lg font-semibold mb-4">Product</h3>
-          <ul className="space-y-2">
-            <li><a href="#" className="text-gray-400 hover:text-white">Features</a></li>
-            <li><a href="#" className="text-gray-400  hover:text-white">Sponsor</a></li>
-            <li><a href="#" className="text-gray-400  hover:text-white">About Us</a></li>
-          </ul>
+        <div className='flex flex-col md:flex-row gap-8 md:gap-12'>
+          <div className='1st element'>
+            <h3 className="text-lg font-semibold mb-4">Product</h3>
+            <ul className="space-y-2">
+              <li><a href="#" className="text-gray-400 hover:text-white">Features</a></li>
+              <li><a href="#" className="text-gray-400  hover:text-white">Sponsor</a></li>
+              <li><a href="#" className="text-gray-400  hover:text-white">About Us</a></li>
+            </ul>
+          </div>
+          <div className='2nd element'>
+            <h3 className="text-lg font-semibold mb-4">Support</h3>
+            <ul className="space-y-2">
+              <li><a href="#" className="text-gray-400 hover:text-white">Documentation</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white">Sponsor</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-white">Help Center</a></li>
+            </ul>
+          </div>
         </div>
-        <div className='2nd element'>
-          <h3 className="text-lg font-semibold mb-4">Support</h3>
-          <ul className="space-y-2">
-            <li><a href="#" className="text-gray-400 hover:text-white">Documentation</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-white">Sponsor</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-white">Help Center</a></li>
-          </ul>
-        </div>
-      </div>
       </div>
       <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
         <p>&copy; 2024 Adnan Khan. All rights reserved.</p>
       </div>
     </div>
   </footer>
-)
+);
 
-export default function LandingPage() {
+const LandingPage: React.FC = () => {
   return (
     <div>
       <Navbar />
@@ -402,5 +410,7 @@ export default function LandingPage() {
       <FAQ />
       <Footer />
     </div>
-  )
-}
+  );
+};
+
+export default LandingPage;
