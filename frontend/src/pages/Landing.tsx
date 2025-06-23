@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ScanText, Box, Download, ChevronDown, Menu, X, Instagram, Linkedin, ImageUp, ShieldCheck, Database, type LucideIcon} from 'lucide-react';
-import demoVid from "../src/assets/demo-video.mp4";
+import demoVid from "../assets/demo-video.mp4";
 import { Link } from 'react-router';
 
 const github = "https://www.github.com/adnankhan46/booleanai";
@@ -23,6 +23,7 @@ interface TeamMemberProps {
   name: string;
   role: string;
   image: string;
+  onClick?: () => void;
 }
 
 interface FAQItemProps {
@@ -32,7 +33,7 @@ interface FAQItemProps {
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  let server_status = false;
+  let server_status = true;
   if(import.meta.env.VITE_SERVER_STATUS==="Paused"){
     server_status = false;
   };
@@ -46,7 +47,7 @@ const Navbar: React.FC = () => {
             <span className="ml-2 text-2xl md:text-3xl font-semibold">Boolean<span className='text-[#6a7cff]'>AI</span></span>
           </div>
           {(!server_status) &&
-            <div className={`ml-20 flex justify-center items-center rounded-2xl my-2 px-4 text-gray-500 border border-gray-600`}>Server is Currently {import.meta.env.VITE_SERVER_STATUS}</div>
+            <div className={`ml-8 text-xs md:text-md flex justify-center items-center rounded-2xl my-4 px-4 text-gray-500 border border-gray-600`}>Server is Currently {import.meta.env.VITE_SERVER_STATUS}</div>
           }
           <div className="hidden md:flex items-center space-x-4">
             <a href="#features" className="text-gray-600 hover:text-gray-900">Features</a>
@@ -262,16 +263,16 @@ const Pricing: React.FC = () => (
     </div>
   </section>
 );
-
-const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image }) => (
-  <div className="text-center">
+const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image, onClick }) => (
+  <div className="text-center cursor-pointer" onClick={onClick}>
     <div className="w-32 h-32 mx-auto mb-4">
-      <img src={image} alt={name} className="w-full h-full rounded-full bg-purple-600" />
+      <img src={image} alt={name} className="w-full h-full rounded-full bg-[#6a7cff]" />
     </div>
     <h3 className="text-lg font-semibold">{name}</h3>
     <p className="text-gray-600">{role}</p>
   </div>
 );
+
 
 const Team: React.FC = () => (
   <section id="team" className="py-20 bg-gray-50">
@@ -282,11 +283,13 @@ const Team: React.FC = () => (
           name="Adnan Khan"
           role="Creator, Developer"
           image="/placeholder.svg?height=128&width=128"
+          onClick={() => window.open("https://github.com/adnankhan46", "_blank")}
         />
         <TeamMember
           name="Garv Thakre"
           role="Developer"
           image="/placeholder.svg?height=128&width=128"
+          onClick={() => window.open("https://github.com/garvthakre", "_blank")}
         />
       </div>
     </div>

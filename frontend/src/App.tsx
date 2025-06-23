@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-import LandingPage from "./Landing";
-import Home from "./pages/home";
+import LandingPage from "./pages/Landing";
+import Home from "./pages/Home";
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
           <Route path="/booleanai" element={<Home/>} />
           <Route path="/" element={<LandingPage />} />
         </Routes>
+       <Analytics />
       </BrowserRouter>
     </div>
   );

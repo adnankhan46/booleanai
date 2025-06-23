@@ -55,6 +55,10 @@ interface AnalysisResponse {
 
 export default function Home() {
   const resultRef = useRef<HTMLDivElement>(null)
+  let server_status = true;
+  if(import.meta.env.VITE_SERVER_STATUS==="Paused"){
+    server_status = false;
+  };
   
   const loadingLabel: string[] = [
     "Connecting the dots (and gates)...",
@@ -219,6 +223,7 @@ export default function Home() {
   const BASE_URL = '/api'
 
   const handleAnalyze = async (): Promise<void> => {
+    if(!server_status) return alert("Web Server is currently paused");
     const canvas = canvasRef.current
     if (!canvas) return
 
